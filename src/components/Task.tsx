@@ -7,13 +7,12 @@ export interface ITask {
 }
 
 export const Task: React.FC<ITask> = (props) => {
-  const { id, title, complete } = props;
+  const { title, complete } = props;
   
   return (
     <div>
-      <p>Id: {id}</p>
       <p>Title: {title}</p>
-      <p>Complete: {complete}</p>
+      <p>Complete: {complete.toString()}</p>
     </div>
   )
 }
