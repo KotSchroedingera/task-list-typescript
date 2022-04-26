@@ -1,35 +1,28 @@
-import React, { useState } from 'react';
-import { ITodo } from '../types/data';
-import { TodoList } from './TodoList';
+import React, { ChangeEventHandler, EventHandler, ReactEventHandler, SyntheticEvent, useState } from 'react'; 
+import { Task, ITask } from './Task';
 
-
-const App: React.FC = () => {
-  const [value, setValue] = useState('');
-  const [todos, setTodos] = useState<ITodo[]>([]);
-
-  const addTodo = (value: string): void => {
-    if (!value) return;
-    setTodos([...todos, {
-      id: Date.now(), 
-      title: value, 
-      complete: false,
-    }]); 
-    setValue('');
-  }
+export const App: React.FC = () => {
+  const [task, setTask] = useState<string>('');
+  const [tasks, setTasks] = useState<ITask[]>([]);
+  
+  const handleInput: ChangeEventHandler<HTMLInputElement> = (evt) => setTask(evt.target.value);
 
   return (
     <div>
       <div>
-        <input 
-          value={value}
-          onChange={evt => setValue(evt.target.value)}
-          type="text" />
-        <button
-          onClick={evt => addTodo(value)}>Add</button>
+        <input
+          type='text'
+          value={task}
+          onChange={handleInput}/>
+        <button>Add task</button>
       </div>
-      <TodoList items={todos}></TodoList>
+      {
+        tasks.length 
+          ? <div>
+            {tasks.map((elem: ITask) => <Task {...elem}/>)}
+          </div>
+          : <p>No posts</p>
+      }
     </div>
   )
 }
-
-export default App;
