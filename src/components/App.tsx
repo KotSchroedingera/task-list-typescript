@@ -1,11 +1,20 @@
-import React, { ChangeEventHandler, EventHandler, ReactEventHandler, SyntheticEvent, useState } from 'react'; 
+import React, { ChangeEventHandler, useState } from 'react'; 
 import { Task, ITask } from './Task';
 
 export const App: React.FC = () => {
   const [task, setTask] = useState<string>('');
   const [tasks, setTasks] = useState<ITask[]>([]);
   
-  const handleInput: ChangeEventHandler<HTMLInputElement> = (evt) => setTask(evt.target.value);
+  const handleInputTask: ChangeEventHandler<HTMLInputElement> = (evt) => setTask(evt.target.value);
+  const handleSubmitTask: ChangeEventHandler<HTMLButtonElement> = (evt) => {
+    evt.preventDefault();
+    const newTask: ITask = {
+      id: Date.now(), 
+      title: task, 
+      complete: false,
+    }
+    setTasks([...tasks, newTask]);
+  }
 
   return (
     <div>
@@ -13,8 +22,11 @@ export const App: React.FC = () => {
         <input
           type='text'
           value={task}
-          onChange={handleInput}/>
-        <button>Add task</button>
+          onChange={handleInputTask}/>
+        <button
+          type='submit'
+          onSubmit={handleSubmitTask}
+        >Add task</button>
       </div>
       {
         tasks.length 
