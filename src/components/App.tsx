@@ -5,14 +5,10 @@ import { Form } from './Form';
 export const App: React.FC = () => {
   const [tasks, setTasks] = useState<ITask[]>([]);
 
-
-
   type TaskHandler = (arg0: string) => void;
-
   const removeTask: TaskHandler = (id) => {
     setTasks(tasks.filter(elem => elem.id !== id));
   };
-
   const changeComplete: TaskHandler = (id) => {
     const newTasks: ITask[] = [];
     for (const elem of tasks) {
@@ -33,11 +29,9 @@ export const App: React.FC = () => {
 
   return (
     <div className='container'>
-      <div>
-        <Form 
-          addTask={addTask}
-          tasks={tasks}/>
-      </div>
+      <Form 
+        addTask={addTask}
+        tasks={tasks}/>
       {
         tasks.length 
           ? <div>
