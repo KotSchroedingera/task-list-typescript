@@ -1,47 +1,42 @@
-import React, { ChangeEventHandler, FormEventHandler, ReactFragment, useState } from 'react'; 
-import { SyntheticEvent } from 'react';
-import { useEffect } from 'react';
-import { useRef } from 'react';
+import React, { useState } from 'react'; 
 import { Task, ITask } from './Task';
+import { Form } from './Form';
 
 export const App: React.FC = () => {
-  const [task, setTask] = useState<string>('');
   const [tasks, setTasks] = useState<ITask[]>([]);
-  const [complete, setComplete] = useState(false); 
-  const inputEl = useRef<HTMLInputElement | null>(null);
 
-  useEffect(() => {
-    inputEl.current?.focus();
-  }, []);
-  
-  const handleInputTask: ChangeEventHandler<HTMLInputElement> = (evt) => setTask(evt.target.value);
-  const handleSubmitTask: FormEventHandler<HTMLFormElement> = (evt) => {
-    evt.preventDefault();
+
+
+  type TaskHandler = (arg0: string) => void;
+
+  const removeTask: TaskHandler = (id) => {
+    setTasks(tasks.filter(elem => elem.id !== id));
+  };
+
+  const changeComplete: TaskHandler = (id) => {
+    const newTasks: ITask[] = [];
+    for (const elem of tasks) {
+      if (elem.id === id) elem.complete = !elem.complete;
+      newTasks.push(elem);
+    }
+    setTasks(newTasks);
+  }
+
+  const addTask = (task: string) => {
     const newTask: ITask = {
-      id: Date.now(), 
+      id: Date.now().toString(), 
       title: task, 
       complete: false,
     };
     setTasks([...tasks, newTask]);
-    setTask('');
-    inputEl.current?.focus();
-  }; 
+  }
 
   return (
-    <div>
+    <div className='container'>
       <div>
-        <form 
-          action=""
-          onSubmit={handleSubmitTask}>
-          <input
-            ref={inputEl}
-            type='text'
-            value={task}
-            onChange={handleInputTask}/>
-          <button
-            type='submit'
-          >Add task</button>
-        </form>
+        <Form 
+          addTask={addTask}
+          tasks={tasks}/>
       </div>
       {
         tasks.length 
@@ -50,8 +45,12 @@ export const App: React.FC = () => {
               return <div key={elem.id}>
                 <Task {...elem}/>
                 <input 
-                  type='checkbox'
-                  checked={elem.complete} />
+                  type='checkbox'            
+                  checked={elem.complete}
+                  onChange={() => changeComplete(elem.id)} />
+                <button
+                  id={elem.id.toString()}
+                  onClick={() => removeTask(elem.id)}>Delete task</button>
                   <hr></hr>
               </div>})}
           </div>
