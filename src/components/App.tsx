@@ -7,8 +7,7 @@ export const App: React.FC = () => {
   const [tasks, setTasks] = useState<ITask[]>([]);
 
   useEffect(() => {
-    const localTasks = localStorage.getItem('tasks');
-    console.log(localTasks);
+    
   }, []);
 
   useEffect(() => {
