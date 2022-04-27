@@ -1,10 +1,19 @@
-import React, { useState } from 'react'; 
+import React, { useEffect, useState } from 'react'; 
 import { ITask } from './Task';
 import { Form } from './Form';
 import { List } from './List';
 
 export const App: React.FC = () => {
   const [tasks, setTasks] = useState<ITask[]>([]);
+
+  useEffect(() => {
+    const localTasks = localStorage.getItem('tasks');
+    console.log(localTasks);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('tasks', JSON.stringify(tasks))
+  }, [tasks]);
 
   type TaskHandler = (arg0: string) => void;
   const removeTask: TaskHandler = (id) => {
@@ -18,14 +27,13 @@ export const App: React.FC = () => {
     }
     setTasks(newTasks);
   }
-
   const addTask = (task: string) => {
     const newTask: ITask = {
       id: Date.now().toString(), 
       title: task, 
       complete: false,
     };
-    setTasks([...tasks, newTask]);
+    setTasks([newTask, ...tasks]);
   }
 
   return (

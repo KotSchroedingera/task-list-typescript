@@ -9,9 +9,9 @@ interface IProps {
 export const List: React.FC<IProps> = (props) => {
   const { tasks, changeComplete, removeTask } = props;
   
-  return <div>
+  return <ul>
     {tasks.map((elem: ITask) => {
-    return <div key={elem.id}>
+    return <li key={elem.id}>
       <Task {...elem}/>
       <label style={{
         display: 'flex',
@@ -33,6 +33,6 @@ export const List: React.FC<IProps> = (props) => {
           <i className="material-icons right">delete</i>
       </button>
       <hr></hr>
-    </div>})}
-  </div>
+    </li>})}
+  </ul>
 }
