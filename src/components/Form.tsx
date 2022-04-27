@@ -20,6 +20,7 @@ export const Form: React.FC<IProps> = ({ addTask, tasks }) => {
 
   const submitHandler: FormEventHandler<HTMLFormElement> = (evt) => {
     evt.preventDefault();
+    if (!task) return;
     for (let elem of tasks) {
       if (elem.title === task.trim()) return;
     }
@@ -32,14 +33,20 @@ export const Form: React.FC<IProps> = ({ addTask, tasks }) => {
       action=""
       onSubmit={(evt) => submitHandler(evt)}
       >
+      <label htmlFor="input-task">Please input task</label>
       <input
+        placeholder="Please input task"
+        id="input-task"
         ref={inputEl}
         type='text'
         value={task}
         onChange={evt => taskInputHandler(evt)} />
-      <button
-        type='submit'
-      >Add task</button>
+      <button 
+        className="btn waves-effect waves-light" 
+        type="submit">
+          Submit task
+          <i className="material-icons right">add_circle_outline</i>
+      </button>
     </form>
   </div>
 }

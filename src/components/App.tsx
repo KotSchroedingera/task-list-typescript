@@ -1,6 +1,7 @@
 import React, { useState } from 'react'; 
-import { Task, ITask } from './Task';
+import { ITask } from './Task';
 import { Form } from './Form';
+import { List } from './List';
 
 export const App: React.FC = () => {
   const [tasks, setTasks] = useState<ITask[]>([]);
@@ -34,20 +35,10 @@ export const App: React.FC = () => {
         tasks={tasks}/>
       {
         tasks.length 
-          ? <div>
-            {tasks.map((elem: ITask) => {
-              return <div key={elem.id}>
-                <Task {...elem}/>
-                <input 
-                  type='checkbox'            
-                  checked={elem.complete}
-                  onChange={() => changeComplete(elem.id)} />
-                <button
-                  id={elem.id.toString()}
-                  onClick={() => removeTask(elem.id)}>Delete task</button>
-                  <hr></hr>
-              </div>})}
-          </div>
+          ? <List
+              tasks={tasks}
+              changeComplete={changeComplete}
+              removeTask={removeTask} />
           : <p>No posts</p>
       }
     </div>
