@@ -1,51 +1,30 @@
-import React, { useEffect, useState } from 'react'; 
-import { ITask } from './Task';
+import React, { useEffect } from 'react'; 
+import { ITask } from './interfaces';
 import { Form } from './Form';
 import { List } from './List';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store/index';
+
 
 export const App: React.FC = () => {
-  const [tasks, setTasks] = useState<ITask[]>([]);
+  const tasks = useSelector((state: RootState) => state.tasks.tasks);
 
   useEffect(() => {
-    
+    const saved: ITask[] = JSON.parse(localStorage.tasks);
+    if (!saved.length) return;
   }, []);
-
+  
   useEffect(() => {
-    localStorage.setItem('tasks', JSON.stringify(tasks))
+    localStorage.setItem('tasks', JSON.stringify(tasks));
   }, [tasks]);
-
-  type TaskHandler = (arg0: string) => void;
-  const removeTask: TaskHandler = (id) => {
-    setTasks(tasks.filter(elem => elem.id !== id));
-  };
-  const changeComplete: TaskHandler = (id) => {
-    const newTasks: ITask[] = [];
-    for (const elem of tasks) {
-      if (elem.id === id) elem.complete = !elem.complete;
-      newTasks.push(elem);
-    }
-    setTasks(newTasks);
-  }
-  const addTask = (task: string) => {
-    const newTask: ITask = {
-      id: Date.now().toString(), 
-      title: task, 
-      complete: false,
-    };
-    setTasks([newTask, ...tasks]);
-  }
 
   return (
     <div className='container'>
       <Form 
-        addTask={addTask}
         tasks={tasks}/>
       {
         tasks.length 
-          ? <List
-              tasks={tasks}
-              changeComplete={changeComplete}
-              removeTask={removeTask} />
+          ? <List />
           : <p>No posts</p>
       }
     </div>

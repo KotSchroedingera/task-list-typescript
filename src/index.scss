@@ -1,0 +1,23 @@
+.tasklist {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 1em;
+  grid-auto-flow: row;
+}
+
+.task { 
+  display: flex;
+  justify-content: space-between;
+  background-color: lightgrey;
+  padding: 1em;
+  label {
+    display: flex;
+    align-items: center;
+  }
+  &__note {
+    color: black;
+    &--done {
+      text-decoration: line-through;
+    }
+  }
+}

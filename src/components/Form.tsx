@@ -1,14 +1,16 @@
 import { useState, useEffect, useRef, ChangeEventHandler, FormEventHandler } from "react"; 
-import { ITask } from "./Task";
+import { useDispatch } from "react-redux";
+import { addTask } from "../store/tasksSlice";
+import { ITask } from "./interfaces";
 
 interface IProps {
-  addTask: (arg0: string) => void;
   tasks: ITask[];
 }
 
-export const Form: React.FC<IProps> = ({ addTask, tasks }) => {
+export const Form: React.FC<IProps> = ({ tasks }) => {
   const [task, setTask] = useState<string>('');
   const inputEl = useRef<HTMLInputElement | null>(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     inputEl.current?.focus();
@@ -24,7 +26,7 @@ export const Form: React.FC<IProps> = ({ addTask, tasks }) => {
     for (let elem of tasks) {
       if (elem.title === task.trim()) return;
     }
-    addTask(task.trim()); 
+    dispatch(addTask({ task }))
     setTask('');
   }
 

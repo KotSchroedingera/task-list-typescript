@@ -1,38 +1,32 @@
-import { Task, ITask } from './Task';
+import { useDispatch, useSelector } from 'react-redux';
+import { ITask } from './interfaces';
+import { RootState } from '../store/index';
+import { deleteTask, toggleTaskComplete } from '../store/tasksSlice';
 
-interface IProps {
-  tasks: ITask[]; 
-  changeComplete: (arg0: string) => void;
-  removeTask: (arg0: string) => void;
-}
 
-export const List: React.FC<IProps> = (props) => {
-  const { tasks, changeComplete, removeTask } = props;
-  
-  return <ul>
+export const List: React.FC = () => {
+
+  const tasks = useSelector((state: RootState) => state.tasks.tasks);
+  const dispatch = useDispatch();
+
+  return <ul className='tasklist'>
     {tasks.map((elem: ITask) => {
-    return <li key={elem.id}>
-      <Task {...elem}/>
-      <label style={{
-        display: 'flex',
-        marginBottom: '1em'
-      }}>
+      const noteClass = ['task__note'];
+      if (elem.complete) noteClass.push('task__note--done')
+    return <li key={elem.id} className='task'>
+      <label>
         <input
           type='checkbox'            
           checked={elem.complete}
-          onChange={() => changeComplete(elem.id)} />
-        {elem.complete
-          ? <span>Set undone</span>
-          : <span>Set done</span>}
+          onChange={() => dispatch(toggleTaskComplete({ id: elem.id }))} />
+        <span className={noteClass.join(' ')}>{elem.title}</span>
       </label>
       <button
         className='btn-small'
-        id={elem.id.toString()}
-        onClick={() => removeTask(elem.id)}>
+        onClick={() => dispatch(deleteTask({ id: elem.id }))}>
           Delete task
           <i className="material-icons right">delete</i>
       </button>
-      <hr></hr>
     </li>})}
   </ul>
 }
