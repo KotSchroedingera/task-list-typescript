@@ -2,21 +2,32 @@ import { useState, useEffect, useRef, ChangeEventHandler, FormEventHandler } fro
 import { useDispatch } from "react-redux";
 import { addTask } from "../store/tasksSlice";
 import { useTasks } from "./hooks";
+import { ITask } from "./interfaces";
 
 
 export const Form: React.FC = () => {
   const [task, setTask] = useState<string>('');
   const tasks = useTasks();
   const inputEl = useRef<HTMLInputElement | null>(null);
-  const helperEl = useRef<HTMLParagraphElement | null>(null);
   const dispatch = useDispatch();
+
+  const isTaskValid = (str: string): boolean => {
+    const task = str.trim();
+    if (!task.length) return false;
+    for (let elem of tasks) {
+      if (elem.title === task) return false;
+    }
+    return true;
+  }
 
   useEffect(() => {
     inputEl.current?.focus();
+    inputEl.current?.classList.add('invalid');
   }, []);
 
+
   const taskInputHandler: ChangeEventHandler<HTMLInputElement> = (evt) => {
-    if (evt.target.value.trim()) {
+    if (isTaskValid(evt.target.value)) {
       inputEl.current?.classList.remove('invalid');
     } else {
       inputEl.current?.classList.add('invalid');
@@ -26,18 +37,10 @@ export const Form: React.FC = () => {
 
   const submitHandler: FormEventHandler<HTMLFormElement> = (evt) => {
     evt.preventDefault();
-    if (!task.trim()) {
-      inputEl.current?.classList.add('invalid');
-      return;
-    };
-    for (let elem of tasks) {
-      if (elem.title === task.trim()) {
-        inputEl.current?.classList.add('invalid');
-        return;
-      };
+    if (isTaskValid(task)) {
+      dispatch(addTask({ task })); 
+      setTask('');
     }
-    dispatch(addTask({ task })); 
-    setTask('');
   }
 
   return <div>
@@ -55,7 +58,6 @@ export const Form: React.FC = () => {
         value={task}
         onChange={evt => taskInputHandler(evt)} />
       <p 
-        ref={helperEl}
         className="helper-text" 
         data-error="task is invalid" 
         data-success="task is valid"></p>
