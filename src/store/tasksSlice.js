@@ -9,7 +9,7 @@ const tasksSlice = createSlice({
   }, 
   reducers: {
     addTask(state, action) {
-      state.tasks.push({
+      state.tasks.unshift({
         id: uuidv4(), 
         title: action.payload.task, 
         complete: action.payload.complete ? true : false,
