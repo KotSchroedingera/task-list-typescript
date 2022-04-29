@@ -1,14 +1,13 @@
 import { useState, useEffect, useRef, ChangeEventHandler, FormEventHandler } from "react"; 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addTask } from "../store/tasksSlice";
+import { RootState } from "../store";
 import { ITask } from "./interfaces";
 
-interface IProps {
-  tasks: ITask[];
-}
 
-export const Form: React.FC<IProps> = ({ tasks }) => {
+export const Form: React.FC = () => {
   const [task, setTask] = useState<string>('');
+  const tasks: ITask[] = useSelector((state: RootState) => state.tasks.tasks);
   const inputEl = useRef<HTMLInputElement | null>(null);
   const dispatch = useDispatch();
 

@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { v4 as uuidv4 } from 'uuid';
 
 
 const tasksSlice = createSlice({
@@ -9,9 +10,9 @@ const tasksSlice = createSlice({
   reducers: {
     addTask(state, action) {
       state.tasks.push({
-        id: Date.now().toString(), 
+        id: uuidv4(), 
         title: action.payload.task, 
-        complete: false,
+        complete: action.payload.complete ? true : false,
       });
     }, 
     deleteTask(state, action) {
