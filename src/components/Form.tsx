@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, ChangeEventHandler, FormEventHandler } fro
 import { useDispatch } from "react-redux";
 import { addTask } from "../store/tasksSlice";
 import { useTasks } from "./hooks";
-import { ITask } from "./interfaces";
 
 
 export const Form: React.FC = () => {
