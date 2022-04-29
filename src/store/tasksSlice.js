@@ -23,9 +23,16 @@ const tasksSlice = createSlice({
       for (const elem of state.tasks) {
         if (elem.id === action.payload.id) elem.complete = !elem.complete;
       }
+    },
+    deleteTasks(state) {
+      state.tasks = [];
     }
   }
 });
 
-export const { addTask, deleteTask, toggleTaskComplete } = tasksSlice.actions;
+export const { 
+  addTask, 
+  deleteTask, 
+  toggleTaskComplete, 
+  deleteTasks } = tasksSlice.actions;
 export const tasksReducer = tasksSlice.reducer;

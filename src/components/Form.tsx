@@ -1,14 +1,14 @@
 import { useState, useEffect, useRef, ChangeEventHandler, FormEventHandler } from "react"; 
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addTask } from "../store/tasksSlice";
-import { RootState } from "../store";
-import { ITask } from "./interfaces";
+import { useTasks } from "./hooks";
 
 
 export const Form: React.FC = () => {
   const [task, setTask] = useState<string>('');
-  const tasks: ITask[] = useSelector((state: RootState) => state.tasks.tasks);
+  const tasks = useTasks();
   const inputEl = useRef<HTMLInputElement | null>(null);
+  const helperEl = useRef<HTMLParagraphElement | null>(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -16,16 +16,27 @@ export const Form: React.FC = () => {
   }, []);
 
   const taskInputHandler: ChangeEventHandler<HTMLInputElement> = (evt) => {
+    if (evt.target.value.trim()) {
+      inputEl.current?.classList.remove('invalid');
+    } else {
+      inputEl.current?.classList.add('invalid');
+    }
     setTask(evt.target.value);
   }; 
 
   const submitHandler: FormEventHandler<HTMLFormElement> = (evt) => {
     evt.preventDefault();
-    if (!task) return;
+    if (!task.trim()) {
+      inputEl.current?.classList.add('invalid');
+      return;
+    };
     for (let elem of tasks) {
-      if (elem.title === task.trim()) return;
+      if (elem.title === task.trim()) {
+        inputEl.current?.classList.add('invalid');
+        return;
+      };
     }
-    dispatch(addTask({ task }))
+    dispatch(addTask({ task })); 
     setTask('');
   }
 
@@ -36,12 +47,18 @@ export const Form: React.FC = () => {
       >
       <label htmlFor="input-task">Please input task</label>
       <input
+        className="valid"
         placeholder="Please input task"
         id="input-task"
         ref={inputEl}
         type='text'
         value={task}
         onChange={evt => taskInputHandler(evt)} />
+      <p 
+        ref={helperEl}
+        className="helper-text" 
+        data-error="task is invalid" 
+        data-success="task is valid"></p>
       <button 
         className="btn waves-effect waves-light" 
         type="submit">

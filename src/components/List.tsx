@@ -1,12 +1,12 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { ITask } from './interfaces';
-import { RootState } from '../store/index';
 import { deleteTask, toggleTaskComplete } from '../store/tasksSlice';
+import { useTasks } from './hooks';
 
 
 export const List: React.FC = () => {
 
-  const tasks = useSelector((state: RootState) => state.tasks.tasks);
+  const tasks = useTasks();
   const dispatch = useDispatch();
 
   return <ul className='tasklist'>
