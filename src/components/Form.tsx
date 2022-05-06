@@ -7,7 +7,10 @@ import { useTasks } from "./hooks";
 export const Form: React.FC = () => {
   const [task, setTask] = useState<string>('');
   const tasks = useTasks();
+
   const inputEl = useRef<HTMLInputElement | null>(null);
+  const helperEl = useRef<HTMLParagraphElement | null>(null);
+  
   const dispatch = useDispatch();
 
   const isTaskValid = (str: string): boolean => {
@@ -16,19 +19,23 @@ export const Form: React.FC = () => {
     for (let elem of tasks) {
       if (elem.title === task) return false;
     }
+    if (task.length > 30) return false;
     return true;
   }
 
   useEffect(() => {
     inputEl.current?.focus();
     inputEl.current?.classList.add('invalid');
+    if (helperEl.current?.textContent) helperEl.current.textContent = 'Enter the text';
   }, []);
 
 
   const taskInputHandler: ChangeEventHandler<HTMLInputElement> = (evt) => {
     if (isTaskValid(evt.target.value)) {
       inputEl.current?.classList.remove('invalid');
+      inputEl.current?.classList.add('valid');
     } else {
+      inputEl.current?.classList.remove('valid');
       inputEl.current?.classList.add('invalid');
     }
     setTask(evt.target.value);
@@ -57,9 +64,12 @@ export const Form: React.FC = () => {
         value={task}
         onChange={evt => taskInputHandler(evt)} />
       <p 
-        className="helper-text" 
-        data-error="task is invalid" 
-        data-success="task is valid"></p>
+        ref={helperEl}
+        className="helper-text">{
+          inputEl.current?.classList.contains('invalid')
+            ? 'Task is invalid'
+            : 'Task is valid'
+        }</p>
       <button 
         className="btn waves-effect waves-light" 
         type="submit">
